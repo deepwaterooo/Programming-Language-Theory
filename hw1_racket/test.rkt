@@ -1,37 +1,50 @@
 #! /usr/bin/env racket
 
-#lang slideshow
+#lang racket/gui
 
-(let ([a 3]
-      [b (list-ref '(1 2 3 4) 3)])
-  (sqr (+ a b)))
-;(or a b)
-(let* ([x 10]
-       [y (* x x)])
-  (list x y))
+(define frame (new frame% [label "Zombie Dancing"]
+                   [width 500]
+                   [height 500]))
 
-(let-values ([(x y) (quotient/remainder 10 3)])
-  (list y x))
+(define msg (new message% [parent frame]
+                 [label "No events so far yet..."]))
 
-(let*-values ([(pi r rr) (values 3.1415926 10
-                                 (lambda (x) (* x x)))]
-              [(perimeter area) (values (* 2 pi r) (* pi (rr r)))])
-  (list area perimeter))
 
-(letrec ([is-even? (lambda (n)
-                     (or (zero? n)
-                         (is-odd? (sub1 n))))]
-         [is-odd? (lambda (n)
-                    (and (not (zero? n))
-                         (is-even? (sub1 n))))])
-  (is-odd? 11))
+; Derive a new canvas (a drawing window) class to handle events
+(define my-canvas%
+  (class canvas%   ; The base class is canvas%
+    ; Define overriding method to handle mouse events
+    (define/override (on-event event)
+      (send msg set-label "Canvas mouse"))
+    ; Define overriding method to handle keyboard events
+    (define/override (on-char event)
+      (send msg set-label "Canvas keyboard"))
+    ; Call the superclass init, passing on all init args
+    (super-new)))
 
-(define ht (hash "key1" "value1" 'key2 1234 3 (list 1 2 3 4) (list 'key4) 'value4))
-(hash-ref ht "key1")
-(hash-ref ht 'key2)
-(hash-ref ht 3)
-(hash-ref ht (list 'key4))
-;(hash-ref ht 'key5)
+; Make a canvas that handles events in the frame
+(new my-canvas% [parent frame]
+     [paint-callback
+      (lambda (canvas dc)
+        (send dc set-scale 3 3)
+        (send dc set-text-foreground "blue")
+;        (send dc set-canvas-background "yellow")
+        (send dc draw-text "Don't Panic!" 0 0))])
+
+
+(define panel (new horizontal-panel% [parent frame]
+                   [alignment '(center center)]))
+(new button% [parent panel]
+     [label "Start"]
+     [callback (lambda (button event)
+                 (send msg set-label "Button click"))])
+(new button% [parent panel]
+     [label "Pause"]
+     [callback (lambda (button event)
+                 (send msg set-label "Pause Button click")
+                 (sleep 3))])
+(send frame show #t)
+
 
 
 (require racket/draw)
@@ -57,7 +70,7 @@
 (send dc draw-line 0 30 30 0)
 
 (require racket/math)
- 
+
 (define no-pen (new pen% [style 'transparent]))
 (define no-brush (new brush% [style 'transparent]))
 (define blue-brush (new brush% [color "blue"]))
@@ -81,13 +94,8 @@
 (draw-face dc)
 
 
-
-(define r (colorize (rectangle 20 20) "blue"))
-
-(define c (colorize (circle 20) "red"))
-
-(define mouse (colorize (rectangle 30 10) "black"))
-
-(vc-append 20 (hc-append 8 c r) mouse)
-
-
+;;; adapt to a zombie ~ me
+;(define r (colorize (rectangle 20 20) "blue"))
+;(define c (colorize (circle 20) "red"))
+;(define mouse (colorize (rectangle 30 10) "black"))
+;(vc-append 20 (hc-append 8 c r) mouse)

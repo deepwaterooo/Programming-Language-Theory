@@ -5,16 +5,17 @@
 
 * Introduction
 - A reposition for tracking summer2016 Programming Language Theory course. 
-- hw1: DrRacket Image/Rsound Animation. 
+- Spent about two hours on <The Racket Guide> book. First 100 pages are easy, but latter on pages I just got the impression, didn't really understand all the functions, structs, objects, inheritance, package module libray etc.
+- *hw1*: A in-class demo using Racket on Wednesday evening 5/25/2016. My teammate and I are planning on some kind of animation, but have not got the final ideas yet (DrRacket Image/Rsound Animation). 
 
 * References
 - framework https://github.com/NetEase/lively-logic
 - https://www.youtube.com/watch?v=SCh0zmP6R5A
 - https://www.youtube.com/watch?v=ayqhX9UA6FY
 - http://racket.tchen.me/practical-racket.html
-- 
-- 
-- 
+- face http://docs.racket-lang.org/draw/overview.html#%28part._.Lines_and_.Simple_.Shapes%29
+- Í¼ÐÎ£ºhttps://www.zhihu.com/question/20789155
+- threads http://www.ithao123.cn/content-4141200.html
 - 
 - 
 - 
