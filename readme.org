@@ -7,6 +7,9 @@
 - A reposition for tracking summer2016 Programming Language Theory course. 
 - Spent about two hours on <The Racket Guide> book. First 100 pages are easy, but latter on pages I just got the impression, didn't really understand all the functions, structs, objects, inheritance, package module libray etc.
 - *hw1*: A in-class demo using Racket on Wednesday evening 5/25/2016. My teammate and I are planning on some kind of animation, but have not got the final ideas yet (DrRacket Image/Rsound Animation). 
+- A simple zombie house && zombie are looking like: 
+
+[[./pic/Screen_Shot_2016-05-20_at_5.02.01_PM.png]]
 
 * References
 - framework https://github.com/NetEase/lively-logic
@@ -16,6 +19,9 @@
 - face http://docs.racket-lang.org/draw/overview.html#%28part._.Lines_and_.Simple_.Shapes%29
 - Í¼ÐÎ£ºhttps://www.zhihu.com/question/20789155
 - threads http://www.ithao123.cn/content-4141200.html
-- 
+- http://docs.racket-lang.org/draw/overview.html#(part._.Lines_and_.Simple_.Shapes)
+- http://docs.racket-lang.org/guide/classes.html
+- https://docs.racket-lang.org/quick/
+- http://docs.racket-lang.org/draw/index.html
 - 
 - 
