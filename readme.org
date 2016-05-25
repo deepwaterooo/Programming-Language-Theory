@@ -4,22 +4,63 @@
 #+author: deepwaterooo
 
 * Introduction
-- A reposition for tracking summer2016 Programming Language Theory course. 
-- Spent about two hours on <The Racket Guide> book. First 100 pages are easy, but latter on pages I just got the impression, didn't really understand all the functions, structs, objects, inheritance, package module libray etc.
-- *hw1*: A in-class demo using Racket on Wednesday evening 5/25/2016. My teammate and I are planning on some kind of animation, but have not got the final ideas yet (DrRacket Image/Rsound Animation). 
-- A simple zombie house && zombie are looking like: 
+- After the ugly yet cute 2d draw trial, I figured I should always stick to what I learned a little bit about, like opengl. So even there are limited resources on line compared against Android Opengl 3d Java c++ examples, here it comes, a starter trial of a rotatable cube (with inherited vertex/direction errors from tetris/3d, but it will be fixed).
+- A simple rotatable cube is looking like:
 
-[[./pic/Screen_Shot_2016-05-20_at_5.02.01_PM.png]]
+[[./pic/Screen_Shot_2016-05-24_at_11_00_03_PM.png]]
+
+- hw1: A in-class demo using Racket on Wednesday evening 5/25/2016. My teammate and I are planning on some kind of animation, but have not got the final ideas yet (DrRacket Image/Rsound Animation). 
+- willl work on tetris 3d in the rest of the evening. 
 
 * References
+** opengl sgl
+- rect hello world https://lists.racket-lang.org/users/archive/2010-October/042474.html
+- cube base: https://gist.github.com/tonyg/5425736
+- Texture Atlases http://jeapostrophe.github.io/2013-05-06-texture--post.html
+- Planet Cute http://docs.racket-lang.org/teachpack/2htdpPlanet_Cute_Images.html
+- Texture https://www.mail-archive.com/racket-users@googlegroups.com/msg03203.html
+- http://lists.racket-lang.org/users/archive/2010-November/043118.html
+- sgl https://github.com/racket/sgl
+- cube https://rosettacode.org/wiki/Draw_a_cuboid#Racket
+- pict3d https://github.com/ntoronto/pict3d
+- pict3d https://docs.racket-lang.org/pict3d/index.html
+- buffering https://lists.racket-lang.org/users/archive/2015-March/066355.html
+- c++ racket ex http://home.adelphi.edu/sbloch/class/archive/333/fall2013/examples/pentagon/
+- https://rosettacode.org/wiki/OpenGL#Racket
+- 
+- 3d programming: http://cs317y982s950831.blogspot.com/
+- 原理： http://cuiqingcai.com/1867.html
+- http://cuiqingcai.com/1867.html
+- 2d http://cuiqingcai.com/1597.html
+- tech cube http://wiki.jikexueyuan.com/project/opengl-es-basics/3d-images.html
+- colorful http://cs317y982s961535.blogspot.com/2010/04/2-3d.html
+- http://www.d3dweb.com/Documents/201202/15-15182458704.html
+- define-struct http://lists.racket-lang.org/users/archive/2008-July/026133.html
+- class ex https://learnxinyminutes.com/docs/racket/
+- gui https://docs.racket-lang.org/pict3d/rendering.html
+- 
+- 
+
+* OOP
+- oop https://docs.racket-lang.org/guide/classes.html
+- creating classes https://docs.racket-lang.org/reference/createclass.html
+- 
+- 
+
+** robot dance
+- https://www.youtube.com/watch?v=lacAgc7rv1o
+- https://www.youtube.com/watch?v=AoCXPicEa8o
+- https://www.youtube.com/watch?v=wQ4KXoFHwL4
+- 
+- 
+
+** other
 - framework https://github.com/NetEase/lively-logic
 - https://www.youtube.com/watch?v=SCh0zmP6R5A
 - https://www.youtube.com/watch?v=ayqhX9UA6FY
 - http://racket.tchen.me/practical-racket.html
-- face http://docs.racket-lang.org/draw/overview.html#%28part._.Lines_and_.Simple_.Shapes%29
-- ͼ�Σ�https://www.zhihu.com/question/20789155
+- 图形：https://www.zhihu.com/question/20789155
 - threads http://www.ithao123.cn/content-4141200.html
-- http://docs.racket-lang.org/draw/overview.html#(part._.Lines_and_.Simple_.Shapes)
 - http://docs.racket-lang.org/guide/classes.html
 - https://docs.racket-lang.org/quick/
 - http://docs.racket-lang.org/draw/index.html
