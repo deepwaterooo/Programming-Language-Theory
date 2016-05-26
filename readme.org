@@ -4,6 +4,13 @@
 #+author: deepwaterooo
 
 * Introduction
+- Todos: 
+  - Don't like the 24 size vector, want to change to be a 8 something, so that it will be easier for me to manipulate other instance of objects as well. 
+  - Try to find better way to handle obj% drawing methods, so that on-paint I may just call the obj's draw methods.
+  - Sub obj% for cubes, and spheres if I need and want to implement any sphere for head, or eyes. 
+  - Will add some others related later according to buddy & course instructor. 
+  - Will update tonight or tomorrow to update status. 
+- 
 - After the ugly yet cute 2d draw trial, I figured I should always stick to what I learned a little bit about, like opengl. So even there are limited resources on line compared against Android Opengl 3d Java c++ examples, here it comes, a starter trial of a rotatable cube (with inherited vertex/direction errors from tetris/3d, but it will be fixed).
 - A simple rotatable cube is looking like:
 
