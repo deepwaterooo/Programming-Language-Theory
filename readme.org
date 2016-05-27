@@ -4,20 +4,15 @@
 #+author: deepwaterooo
 
 * Introduction
+- A zombie is coming~
 - Todos: 
-  - Don't like the 24 size vector, want to change to be a 8 something, so that it will be easier for me to manipulate other instance of objects as well. 
-  - Try to find better way to handle obj% drawing methods, so that on-paint I may just call the obj's draw methods.
   - Sub obj% for cubes, and spheres if I need and want to implement any sphere for head, or eyes. 
-  - Will add some others related later according to buddy & course instructor. 
-  - Will update tonight or tomorrow to update status. 
-- 
+  - Team body's spiderman I will try to figure out how to Texture or draw as the dancing stage. 
+  - Need figure out thow to dance with time changes, or how to move according to keytype input. 
 - After the ugly yet cute 2d draw trial, I figured I should always stick to what I learned a little bit about, like opengl. So even there are limited resources on line compared against Android Opengl 3d Java c++ examples, here it comes, a starter trial of a rotatable cube (with inherited vertex/direction errors from tetris/3d, but it will be fixed).
 - A simple rotatable cube is looking like:
 
-[[./pic/Screen_Shot_2016-05-24_at_11_00_03_PM.png]]
-
-- hw1: A in-class demo using Racket on Wednesday evening 5/25/2016. My teammate and I are planning on some kind of animation, but have not got the final ideas yet (DrRacket Image/Rsound Animation). 
-- willl work on tetris 3d in the rest of the evening. 
+[[./pic/Screen_Shot_2016-05-26_at_5_59_13_PM.png]]
 
 * References
 ** opengl sgl
