@@ -11,7 +11,7 @@
   - My team buddy's spiderman I will try to figure out how to Texture or draw as the dancing stage. 
 - A current rotatable zombie and my team buddy's spiderman are looking like:
 
-[[./pic/Screen_Shot_2016-05-27_at_6_04_21_PM.png]]
+[[./pic/Screen_Shot_2016-05-28_at_3_13_17_AM.png]]
 
 [[./pic/Screen_Shot_2016-05-27_at_6_08_17_PM.png]]
 
