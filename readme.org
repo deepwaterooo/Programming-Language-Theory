@@ -6,9 +6,10 @@
 * Introduction
 - Zombies are coming~
 - Todos: 
-  - With struct help could have more fun dancing with more zombies, but need try hard to figure out how to dance with time changes (has not really got ideas today), or need to move according to keytype inputs triggers. 
+  - Need try hard to figure out animation, how to dance with time changes (has not really got ideas today), or need to move according to keytype inputs triggers. 
+  - Need to apply my team buddy's spiderman either as dancing stage or logo on zombies, need to figure out how to implement this. 
+  - Figured out how should I traverse a zombie every time, and there should be a bunch of zombies are coming~
   - Sub obj% for cubes, and spheres if I need and want to implement any sphere for head, or eyes. 
-  - My team buddy's spiderman I will try to figure out how to Texture or draw as the dancing stage. 
 - A current rotatable zombie and my team buddy's spiderman are looking like:
 
 [[./pic/Screen_Shot_2016-05-28_at_3_13_17_AM.png]]
@@ -49,6 +50,8 @@
 - emacs lambda http://ergoemacs.org/emacs/emacs_pretty_lambda.html
 - 
 - 
+- 
+- 
 
 * OOP
 - oop https://docs.racket-lang.org/guide/classes.html
@@ -73,5 +76,3 @@
 - http://docs.racket-lang.org/guide/classes.html
 - https://docs.racket-lang.org/quick/
 - http://docs.racket-lang.org/draw/index.html
-- 
-- 

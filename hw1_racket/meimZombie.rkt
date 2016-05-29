@@ -7,12 +7,12 @@
 (require sgl/gl)
 (require sgl/gl-vectors)
 
-; Macro to delimit and automatically end glBegin - glEnd contexts.
 (define-syntax-rule (glbgnend Vertex-Mode statement ...)
   (let () (glBegin Vertex-Mode) statement ... (glEnd)))
- 
-(define (resize w h)
-  (glViewport 0 0 w h))
+(define-syntax-rule (glppm statement ...)
+  (let () (glPushMatrix) statement ... (glPopMatrix)))
+
+(define (resize w h) (glViewport 0 0 w h))
 
 (define vec3%
   (class object%
@@ -38,7 +38,7 @@
 
 (define obj%
   (class object%
-    (init size ori ro ax angle color coord)
+    (init size ori ro ax angle color coord) ; remove ax
     (define currsize size)
     (define currori ori)
     (define currro ro)
@@ -66,8 +66,14 @@
       (send currro set ro))
     (define/public (resetAx ax)
       (set! currax ax))
-    (define/public (resetAngle angle)
-      (set! currangle angle))
+    (define/public (resetAngle angle) 
+      (send currangle set angle))
+    (define/public (resetAngleX xangle)
+      (send currangle setX xangle))
+    (define/public (resetAngleY yangle)
+      (send currangle setY yangle))
+    (define/public (resetAngleZ zangle)
+      (send currangle setZ zangle))
     (define/public (resetColor color)
       (set! currcolor color))
     (define/public updateCoords
@@ -126,6 +132,11 @@
         (glRotatef xangle 1 0 0)
         (glRotatef yangle 0 1 0)
         (glRotatef zangle 0 0 1)))
+    (define/public rotExcute
+      (lambda ()
+        (glRotatef (send currangle getX) 1 0 0)
+        (glRotatef (send currangle getY) 0 1 0)
+        (glRotatef (send currangle getZ) 0 0 1)))
     ))
 
 (define my-canvas%
@@ -155,7 +166,7 @@
               (glVertex3d (send (send myhead getCoords 6) getX) (send (send myhead getCoords 6) getY) (send (send myhead getCoords 6) getZ))
               (glVertex3d (send (send myhead getCoords 2) getX) (send (send myhead getCoords 2) getY) (send (send myhead getCoords 2) getZ))
               (glVertex3d (send (send myhead getCoords 3) getX) (send (send myhead getCoords 3) getY) (send (send myhead getCoords 3) getZ)))
-    (glbgnend GL_QUADS (glColor3f 1 0 0); 5 1 2 6 右 红
+    (glbgnend GL_QUADS (glColor3f 1 0 0) ; 5 1 2 6 右 红
               (glVertex3d (send (send myhead getCoords 5) getX) (send (send myhead getCoords 5) getY) (send (send myhead getCoords 5) getZ))
               (glVertex3d (send (send myhead getCoords 1) getX) (send (send myhead getCoords 1) getY) (send (send myhead getCoords 1) getZ))
               (glVertex3d (send (send myhead getCoords 2) getX) (send (send myhead getCoords 2) getY) (send (send myhead getCoords 2) getZ))
@@ -165,12 +176,12 @@
               (glVertex3d (send (send myhead getCoords 5) getX) (send (send myhead getCoords 5) getY) (send (send myhead getCoords 5) getZ))
               (glVertex3d (send (send myhead getCoords 6) getX) (send (send myhead getCoords 6) getY) (send (send myhead getCoords 6) getZ))
               (glVertex3d (send (send myhead getCoords 7) getX) (send (send myhead getCoords 7) getY) (send (send myhead getCoords 7) getZ)))
-    (glbgnend GL_QUADS (glColor3f 1 0 0); 4 0 3 7 左 红
+    (glbgnend GL_QUADS (glColor3f 1 0 0) ; 4 0 3 7 左 红
               (glVertex3d (send (send myhead getCoords 0) getX) (send (send myhead getCoords 0) getY) (send (send myhead getCoords 0) getZ))
               (glVertex3d (send (send myhead getCoords 4) getX) (send (send myhead getCoords 4) getY) (send (send myhead getCoords 4) getZ))
               (glVertex3d (send (send myhead getCoords 7) getX) (send (send myhead getCoords 7) getY) (send (send myhead getCoords 7) getZ))
               (glVertex3d (send (send myhead getCoords 3) getX) (send (send myhead getCoords 3) getY) (send (send myhead getCoords 3) getZ)))
-    (glbgnend GL_QUADS (glColor3f 1 1 0); 4 5 1 0 后 黄
+    (glbgnend GL_QUADS (glColor3f 1 1 0) ; 4 5 1 0 后 黄
               (glVertex3d (send (send myhead getCoords 4) getX) (send (send myhead getCoords 4) getY) (send (send myhead getCoords 4) getZ))
               (glVertex3d (send (send myhead getCoords 5) getX) (send (send myhead getCoords 5) getY) (send (send myhead getCoords 5) getZ))
               (glVertex3d (send (send myhead getCoords 1) getX) (send (send myhead getCoords 1) getY) (send (send myhead getCoords 1) getZ))
@@ -189,148 +200,69 @@
   (glMatrixMode GL_MODELVIEW)
   (glLoadIdentity)
 ;  (glPushMatrix)      ; not self defined, difficult to control
-;  (glTranslatef 0 1 0)
-;  (glRotatef -60 0 0 1) ; rotate center wrong
-;  (glTranslatef 0 3.8 0)
-;  (gluSphere (gluNewQuadric) 1.0 15 15)  
+;  (glTranslatef 0 4.8 0)
+;  (glRotatef -90 0 0 1) ; rotate center wrong
 ;  (glTranslatef 0 -4.8 0)
+;  (gluSphere (gluNewQuadric) 1.0 15 15)  
 ;  (glPopMatrix)
 
   (glTranslatef -5 0.0 0.0)
   (glRotatef 5 1.0 0.0 0.0) ; 60
   (glRotatef 10 0.0 1.0 0.0) ; -60
   (glRotatef 5 0.0 0.0 1.0) ; 120
-
-;  (glPushMatrix)
+  
+; (glppm
 ;  (glRotatef 180 0 0 1)
 
-  (draw (me-body zmb))
+  (drawZmbs zmb)
+;  (draw (me-body zmb))
+;  (drawHead (me-head zmb))
+;  (drawArms (me-larm zmb))
+;  (glppm ; rarm
+;   (send (me-rarm zmb) trsYto0)
+;   (send (me-rarm zmb) rotX 60)
+;   (send (me-rarm zmb) trsYtoRo)
+;   (draw (me-rarm zmb)))
+;  (glppm ; lleg
+;   (send (me-lleg zmb) trsto0) 
+;   (send (me-lleg zmb) rotZ -45)
+;   (send (me-lleg zmb) trstoRo)
+;   (draw (me-lleg zmb)))
+;  (drawLegs (me-rleg zmb))
   
-  (glPushMatrix)
-;  (send (head-hd (me-head zmb)) rotY -50) ; for control
-  (draw (head-hd (me-head zmb))) 
-  (glPushMatrix)
-  (send (head-le (me-head zmb)) trsto0)
-  (send (head-le (me-head zmb)) rotZ 45)
-  (send (head-le (me-head zmb)) trstoRo)
-  (draw (head-le (me-head zmb)))
-  (glPopMatrix)
-  (glPushMatrix)
-  (send (head-re (me-head zmb)) trsto0)
-  (send (head-re (me-head zmb)) rotZ -45)
-  (send (head-re (me-head zmb)) trstoRo)
-  (draw (head-re (me-head zmb)))
-  (glPopMatrix)
-  (glPushMatrix)
-  (send (head-mo (me-head zmb)) trsto0)
-  (send (head-mo (me-head zmb)) rotZ 45)
-  (send (head-mo (me-head zmb)) trstoRo)
-  (draw (head-mo (me-head zmb)))
-  (glPopMatrix)
-  (glPopMatrix)
-  (glPushMatrix) ; fighting~
-  (send (arms-la (me-larm zmb)) trsto0)
-  (send (arms-la (me-larm zmb)) rot -90 -45 0)
-  (send (arms-la (me-larm zmb)) trstoRo) 
-  (draw (arms-la (me-larm zmb)))
-  (glPushMatrix)
-  (send (arms-sa (me-larm zmb)) trsto0)
-  (send (arms-sa (me-larm zmb)) rot -90 0 90)
-  (send (arms-sa (me-larm zmb)) trstoRo)
-  (draw (arms-sa (me-larm zmb)))
-  (glPushMatrix)
-  (send (arms-fg (me-larm zmb)) trsto0)
-  (send (arms-fg (me-larm zmb)) rotZ 45)
-  (send (arms-fg (me-larm zmb)) trstoRo)
-  (draw (arms-fg (me-larm zmb)))
-  (glPopMatrix)
-  (glPopMatrix)
-  (glPopMatrix)
-  (glPushMatrix)
-  (send (me-rarm zmb) trsYto0)
-  (send (me-rarm zmb) rotX 60)
-  (send (me-rarm zmb) trsYtoRo)
-  (draw (me-rarm zmb))
-  (glPopMatrix)
-  (glPushMatrix)
-  (send (me-lleg zmb) trsto0) 
-  (send (me-lleg zmb) rotZ -45)
-  (send (me-lleg zmb) trstoRo)
-  (draw (me-lleg zmb))
-  (glPopMatrix)
-
-;  (glPushMatrix)
-;  (send (me-rleg zmb) trsto0) 
-;  (send (me-rleg zmb) rotX -60)
-;  (send (me-rleg zmb) trstoRo)
-  (draw (legs-ll (me-rleg zmb)))
-  (draw (legs-sl (me-rleg zmb)))
-  (draw (legs-ft (me-rleg zmb)))
-;  (glPopMatrix)
-  
-;  (glPopMatrix)
+;  ) ; (glppm) ; ck
   
   (glTranslatef 8 0 0)
-  
-  (draw (me-body sec)) ; serve as control
 
-  (glPushMatrix)
-  (send (head-hd (me-head sec)) rotY -50)
-  (draw (head-hd (me-head sec))) 
-  (glPushMatrix)
-  (send (head-le (me-head sec)) trsto0)
-  (send (head-le (me-head sec)) rotZ 45)
-  (send (head-le (me-head sec)) trstoRo)
-  (draw (head-le (me-head sec)))
-  (glPopMatrix)
-  (glPushMatrix)
-  (send (head-re (me-head sec)) trsto0)
-  (send (head-re (me-head sec)) rotZ -45)
-  (send (head-re (me-head sec)) trstoRo)
-  (draw (head-re (me-head sec)))
-  (glPopMatrix)
-  (glPushMatrix)
-  (send (head-mo (me-head sec)) trsto0)
-  (send (head-mo (me-head sec)) rotZ 45)
-  (send (head-mo (me-head sec)) trstoRo)
-  (draw (head-mo (me-head sec)))
-  (glPopMatrix)
-  (glPopMatrix)
-  (draw (arms-la (me-larm sec)))
-  (draw (arms-sa (me-larm sec)))
-  (draw (arms-fg (me-larm sec)))
+  ; serve as control
+  (draw (me-body sec)) 
 
-  (glPushMatrix)
-  (send (me-rarm sec) trsYto0)
-  (send (me-rarm sec) rotX 60)
-  (send (me-rarm sec) trsYtoRo)
-  (draw (me-rarm sec))
-  (glPopMatrix)
-  (glPushMatrix)
-  (send (me-lleg sec) trsto0) 
-  (send (me-lleg sec) rotZ -45)
-  (send (me-lleg sec) trstoRo)
-  (draw (me-lleg sec))
-  (glPopMatrix)
-  
-  (glPushMatrix)
-  (send (legs-ll (me-rleg sec)) trsto0) 
-  (send (legs-ll (me-rleg sec)) rot -90 0 60)
-  (send (legs-ll (me-rleg sec)) trstoRo)
-  (draw (legs-ll (me-rleg sec)))
-  (glPushMatrix)
-  (send (legs-sl (me-rleg sec)) trsto0) 
-  (send (legs-sl (me-rleg sec)) rot 135 0 0)
-  (send (legs-sl (me-rleg sec)) trstoRo)
-  (draw (legs-sl (me-rleg sec)))
-  (glPushMatrix)
-  (send (legs-ft (me-rleg sec)) trsto0) 
-  (send (legs-ft (me-rleg sec)) rot 90 0 0)
-  (send (legs-ft (me-rleg sec)) trstoRo)
-  (draw (legs-ft (me-rleg sec)))
-  (glPopMatrix)
-  (glPopMatrix)
-  (glPopMatrix)
+  (send (head-hd (me-head sec)) resetAngle (new vec3% [x 0] [y -50] [z 0]))
+  (send (head-le (me-head sec)) resetAngle (new vec3% [x 0] [y 0] [z 45]))
+  (send (head-re (me-head sec)) resetAngle (new vec3% [x 0] [y 0] [z -45]))
+  (send (head-mo (me-head sec)) resetAngle (new vec3% [x 0] [y 0] [z 45]))
+  (drawHead (me-head sec))
+
+  (send (arms-la (me-larm sec)) resetAngle (new vec3% [x 0] [y 0] [z 0]))
+  (send (arms-sa (me-larm sec)) resetAngle (new vec3% [x 0] [y 0] [z 0]))
+  (send (arms-fg (me-larm sec)) resetAngle (new vec3% [x 0] [y 0] [z 0]))
+  (drawArms (me-larm sec))
+
+  (glppm
+   (send (me-rarm sec) trsYto0)
+   (send (me-rarm sec) rotX 60)
+   (send (me-rarm sec) trsYtoRo)
+   (draw (me-rarm sec)))
+  (glppm
+   (send (me-lleg sec) trsto0) 
+   (send (me-lleg sec) rotZ -45)
+   (send (me-lleg sec) trstoRo)
+   (draw (me-lleg sec)))
+
+  (send (legs-ll (me-rleg sec)) resetAngle (new vec3% [x -90] [y 0] [z 60]))
+  (send (legs-sl (me-rleg sec)) resetAngle (new vec3% [x 135] [y 0] [z 0]))
+  (send (legs-ft (me-rleg sec)) resetAngle (new vec3% [x 90] [y 0] [z 0]))
+  (drawLegs (me-rleg sec))
   )
 
 (define timer
@@ -340,32 +272,121 @@
 ;    gluTimerFunc(refreshMills timer 0)   ; // next timer call milliseconds later
     ))
 
-(define body (new obj% [size (new vec3% [x 2.0] [y 2.0] [z 1.0])] [ori (new vec3% [x 0.00] [y 0.0] [z 0.0])] [ro (new vec3% [x 0.0] [y 2.0] [z 0.0])] [ax 2.0]  [angle 2.55] [color "yellow"] [coord '()]))
-
+(define body (new obj% [size (new vec3% [x 2.0] [y 2.0] [z 1.0])] [ori (new vec3% [x 0.00] [y 0.0] [z 0.0])] [ro (new vec3% [x 0.0] [y 2.0] [z 0.0])] [ax 2.0]  [angle (new vec3% [x 0] [y 0] [z 0])] [color "yellow"] [coord '()]))
 (struct head (hd le re mo))
-(define hbox (new obj% [size (new vec3% [x 0.9] [y 0.9] [z 0.9])] [ori (new vec3% [x 0.00] [y 2.9] [z 0.0])] [ro (new vec3% [x 0.0] [y 2.0] [z 0.0])] [ax 3.0]  [angle 3.54] [color "yellow"] [coord '()]))
-(define leye (new obj% [size (new vec3% [x 0.2] [y 0.2] [z 0.3])] [ori (new vec3% [x -0.4] [y 3.2] [z 0.9])] [ro (new vec3% [x -0.4] [y 3.2] [z 0.9])] [ax 3.0] [angle 3.54] [color "yellow"] [coord '()]))
-(define reye (new obj% [size (new vec3% [x 0.1] [y 0.1] [z 0.2])] [ori (new vec3% [x 0.40] [y 3.2] [z 0.9])] [ro (new vec3% [x 0.40] [y 3.2] [z 0.9])] [ax 3.0] [angle 3.54] [color "yellow"] [coord '()]))
-(define moth (new obj% [size (new vec3% [x 0.3] [y 0.2] [z 0.3])] [ori (new vec3% [x 0.00] [y 2.5] [z 0.9])] [ro (new vec3% [x 0.00] [y 2.5] [z 0.9])] [ax 3.0] [angle 3.54] [color "yellow"] [coord '()]))
+(define hbox (new obj% [size (new vec3% [x 0.9] [y 0.9] [z 0.9])] [ori (new vec3% [x 0.00] [y 2.9] [z 0.0])] [ro (new vec3% [x 0.00] [y 2.0] [z 0.0])] [ax 3.0] [angle (new vec3% [x 0] [y 0] [z 0])] [color "yellow"] [coord '()]))
+(define leye (new obj% [size (new vec3% [x 0.2] [y 0.2] [z 0.3])] [ori (new vec3% [x -0.4] [y 3.2] [z 0.9])] [ro (new vec3% [x -0.4] [y 3.2] [z 0.9])] [ax 3.0] [angle (new vec3% [x 0] [y 0] [z 45])] [color "yellow"] [coord '()]))
+(define reye (new obj% [size (new vec3% [x 0.1] [y 0.1] [z 0.2])] [ori (new vec3% [x 0.40] [y 3.2] [z 0.9])] [ro (new vec3% [x 0.40] [y 3.2] [z 0.9])] [ax 3.0] [angle (new vec3% [x 0] [y 0] [z -45])] [color "yellow"] [coord '()]))
+(define moth (new obj% [size (new vec3% [x 0.3] [y 0.2] [z 0.3])] [ori (new vec3% [x 0.00] [y 2.5] [z 0.9])] [ro (new vec3% [x 0.00] [y 2.5] [z 0.9])] [ax 3.0] [angle (new vec3% [x 0] [y 0] [z 45])] [color "yellow"] [coord '()]))
 (define myhead (head hbox leye reye moth))
+; debugging, delete later
+(define hbox2 (new obj% [size (new vec3% [x 0.9] [y 0.9] [z 0.9])] [ori (new vec3% [x 0.00] [y 2.9] [z 0.0])] [ro (new vec3% [x 0.00] [y 2.0] [z 0.0])] [ax 3.0] [angle (new vec3% [x 0] [y 0] [z 0])] [color "yellow"] [coord '()]))
+(define myhead2 (head hbox2 leye reye moth))
+(define (drawHead head) ; head : { hd, then le | re | mo separately }
+  (glppm ; need to check ppm scope for hd  vs  swap-gl-buffers  vs  objects pass by val vs ref
+   (send (head-hd head) trsto0)
+   (send (head-hd head) rotExcute)
+   (send (head-hd head) trstoRo)
+   (draw (head-hd head))
+   (glppm
+    (send (head-le head) trsto0)
+    (send (head-le head) rotExcute)
+    (send (head-le head) trstoRo)
+    (draw (head-le head)))
+   (glppm
+    (send (head-re head) trsto0)
+    (send (head-re head) rotExcute)
+    (send (head-re head) trstoRo)
+    (draw (head-re head)))
+   (glppm
+    (send (head-mo head) trsto0)
+    (send (head-mo head) rotExcute)
+    (send (head-mo head) trstoRo)
+    (draw (head-mo head)))))
+
 (struct arms (la sa fg))
-(define mylla (new obj% [size (new vec3% [x 0.8] [y 1.0] [z 0.8])] [ori (new vec3% [x -2.8] [y 1.00] [z 0.0])] [ro (new vec3% [x -2.8] [y 2.0] [z 0.0])] [ax 0.8] [angle 55]  [color "yellow"] [coord '()]))
-(define mylsa (new obj% [size (new vec3% [x 0.5] [y 0.8] [z 0.5])] [ori (new vec3% [x -2.8] [y -0.8] [z 0.0])] [ro (new vec3% [x -2.8] [y 0.0] [z 0.0])] [ax 0.8] [angle 55]  [color "yellow"] [coord '()]))
-(define mylfg (new obj% [size (new vec3% [x 0.1] [y 0.4] [z 0.3])] [ori (new vec3% [x -2.8] [y -2.0] [z 0.0])] [ro (new vec3% [x -2.8] [y -1.6] [z 0.0])] [ax 0.8] [angle 55]  [color "yellow"] [coord '()]))
+(define mylla (new obj% [size (new vec3% [x 0.8] [y 1.0] [z 0.8])] [ori (new vec3% [x -2.8] [y 1.00] [z 0.0])] [ro (new vec3% [x -2.8] [y 2.0] [z 0.0])] [ax 0.8] [angle (new vec3% [x -90] [y -45] [z 0])]  [color "yellow"] [coord '()]))
+(define mylsa (new obj% [size (new vec3% [x 0.5] [y 0.8] [z 0.5])] [ori (new vec3% [x -2.8] [y -0.8] [z 0.0])] [ro (new vec3% [x -2.8] [y 0.0] [z 0.0])] [ax 0.8] [angle (new vec3% [x -90] [y 0] [z 90])]  [color "yellow"] [coord '()]))
+(define mylfg (new obj% [size (new vec3% [x 0.1] [y 0.4] [z 0.3])] [ori (new vec3% [x -2.8] [y -2.0] [z 0.0])] [ro (new vec3% [x -2.8] [y -1.6] [z 0.0])] [ax 0.8] [angle (new vec3% [x 0] [y 0] [z 45])]  [color "yellow"] [coord '()]))
 (define larm (arms mylla mylsa mylfg))
-(define rarm (new obj% [size (new vec3% [x 0.8] [y 2.0] [z 0.8])] [ori (new vec3% [x 2.80] [y 2.0] [z 0.0])] [ro (new vec3% [x 2.80] [y 2.0] [z 0.0])] [ax 0.8] [angle 55]  [color "yellow"] [coord '()]))
+(define mylla2 (new obj% [size (new vec3% [x 0.8] [y 1.0] [z 0.8])] [ori (new vec3% [x -2.8] [y 1.00] [z 0.0])] [ro (new vec3% [x -2.8] [y 2.0] [z 0.0])] [ax 0.8] [angle (new vec3% [x -90] [y -45] [z 0])]  [color "yellow"] [coord '()]))
+(define mylsa2 (new obj% [size (new vec3% [x 0.5] [y 0.8] [z 0.5])] [ori (new vec3% [x -2.8] [y -0.8] [z 0.0])] [ro (new vec3% [x -2.8] [y 0.0] [z 0.0])] [ax 0.8] [angle (new vec3% [x -90] [y 0] [z 90])]  [color "yellow"] [coord '()]))
+(define mylfg2 (new obj% [size (new vec3% [x 0.1] [y 0.4] [z 0.3])] [ori (new vec3% [x -2.8] [y -2.0] [z 0.0])] [ro (new vec3% [x -2.8] [y -1.6] [z 0.0])] [ax 0.8] [angle (new vec3% [x 0] [y 0] [z 45])]  [color "yellow"] [coord '()]))
+(define larm2 (arms mylla2 mylsa2 mylfg2))
+(define rarm (new obj% [size (new vec3% [x 0.8] [y 2.0] [z 0.8])] [ori (new vec3% [x 2.80] [y 2.0] [z 0.0])] [ro (new vec3% [x 2.80] [y 2.0] [z 0.0])] [ax 0.8] [angle (new vec3% [x 0] [y 0] [z 0])]  [color "yellow"] [coord '()]))
+(define (drawArms arms) ; arms : { la { sa { fg } } }
+  (glppm
+   (send (arms-la arms) trsto0)
+   (send (arms-la arms) rotExcute)
+   (send (arms-la arms) trstoRo)
+   (draw (arms-la arms))
+   (glppm
+    (send (arms-sa arms) trsto0)
+    (send (arms-sa arms) rotExcute)
+    (send (arms-sa arms) trstoRo)
+    (draw (arms-sa arms))
+    (glppm
+     (send (arms-fg arms) trsto0)
+     (send (arms-fg arms) rotExcute)
+     (send (arms-fg arms) trstoRo)
+     (draw (arms-fg arms)))
+    )))
 
 (struct legs (ll sl ft))
-(define myrll (new obj% [size (new vec3% [x 0.8] [y 2.0] [z 0.8])] [ori (new vec3% [x 0.80] [y -4.0] [z 0])]  [ro (new vec3% [x 0.80] [y -2.00] [z 0.0])] [ax 0.8] [angle 55] [color "yerlow"] [coord '()]))
-(define myrsl (new obj% [size (new vec3% [x 0.5] [y 1.5] [z 0.5])] [ori (new vec3% [x 0.80] [y -7.5] [z 0.0])] [ro (new vec3% [x 0.80] [y -6.0] [z 0.0])] [ax 0.8] [angle 55]  [color "yellow"] [coord '()]))
-(define myrft (new obj% [size (new vec3% [x 0.6] [y 0.2] [z 0.7])] [ori (new vec3% [x 0.80] [y -9.2] [z 0.4])] [ro (new vec3% [x 0.80] [y -9.0] [z 0.0])] [ax 0.8] [angle 55]  [color "yellow"] [coord '()]))
+(define myrll (new obj% [size (new vec3% [x 0.8] [y 2.0] [z 0.8])] [ori (new vec3% [x 0.80] [y -4.0] [z 0])]  [ro (new vec3% [x 0.80] [y -2.00] [z 0.0])] [ax 0.8] [angle (new vec3% [x 0] [y 0] [z 0])] [color "yerlow"] [coord '()]))
+(define myrsl (new obj% [size (new vec3% [x 0.5] [y 1.5] [z 0.5])] [ori (new vec3% [x 0.80] [y -7.5] [z 0.0])] [ro (new vec3% [x 0.80] [y -6.0] [z 0.0])] [ax 0.8] [angle (new vec3% [x 0] [y 0] [z 0])]  [color "yellow"] [coord '()]))
+(define myrft (new obj% [size (new vec3% [x 0.6] [y 0.2] [z 0.7])] [ori (new vec3% [x 0.80] [y -9.2] [z 0.4])] [ro (new vec3% [x 0.80] [y -9.0] [z 0.0])] [ax 0.8] [angle (new vec3% [x 0] [y 0] [z 0])]  [color "yellow"] [coord '()]))
 (define rleg (legs myrll myrsl myrft))
-(define lleg (new obj% [size (new vec3% [x 0.8] [y 3.5] [z 0.8])] [ori (new vec3% [x -0.8] [y -5.5] [z 0])]  [ro (new vec3% [x -0.8] [y -2.0] [z 0.0])] [ax 0.8] [angle 55] [color "yellow"] [coord '()]))
+(define myrll2 (new obj% [size (new vec3% [x 0.8] [y 2.0] [z 0.8])] [ori (new vec3% [x 0.80] [y -4.0] [z 0])]  [ro (new vec3% [x 0.80] [y -2.00] [z 0.0])] [ax 0.8] [angle (new vec3% [x 0] [y 0] [z 0])] [color "yerlow"] [coord '()]))
+(define myrsl2 (new obj% [size (new vec3% [x 0.5] [y 1.5] [z 0.5])] [ori (new vec3% [x 0.80] [y -7.5] [z 0.0])] [ro (new vec3% [x 0.80] [y -6.0] [z 0.0])] [ax 0.8] [angle (new vec3% [x 0] [y 0] [z 0])]  [color "yellow"] [coord '()]))
+(define myrft2 (new obj% [size (new vec3% [x 0.6] [y 0.2] [z 0.7])] [ori (new vec3% [x 0.80] [y -9.2] [z 0.4])] [ro (new vec3% [x 0.80] [y -9.0] [z 0.0])] [ax 0.8] [angle (new vec3% [x 0] [y 0] [z 0])]  [color "yellow"] [coord '()]))
+(define rleg2 (legs myrll2 myrsl2 myrft2))
+(define lleg (new obj% [size (new vec3% [x 0.8] [y 3.5] [z 0.8])] [ori (new vec3% [x -0.8] [y -5.5] [z 0])]  [ro (new vec3% [x -0.8] [y -2.0] [z 0.0])] [ax 0.8] [angle (new vec3% [x 0] [y 0] [z 0])] [color "yellow"] [coord '()]))
+(define (drawLegs legs) ; legs : { ll { sl { ft } } }
+  (glppm
+   (send (legs-ll legs) trsto0)
+   (send (legs-ll legs) rotExcute)
+   (send (legs-ll legs) trstoRo)
+   (draw (legs-ll legs))
+   (glppm
+    (send (legs-sl legs) trsto0)
+    (send (legs-sl legs) rotExcute)
+    (send (legs-sl legs) trstoRo)
+    (draw (legs-sl legs))
+    (glppm
+     (send (legs-ft legs) trsto0)
+     (send (legs-ft legs) rotExcute)
+     (send (legs-ft legs) trstoRo)
+     (draw (legs-ft legs)))
+    )))
 
 (struct me (body head larm rarm lleg rleg) #:transparent #:mutable)
+(define (drawZmbs zmb) ; draw one zombie, later on loop if vector of zmbs
+  (glppm
+   (send (me-body zmb) trsto0)
+   (send (me-body zmb) rotExcute)
+   (send (me-body zmb) trstoRo)
+   (draw (me-body zmb)) ; still need generic this one
+   (drawHead (me-head zmb))
+   (drawArms (me-larm zmb))
+;   (drawArms (me-rarm zmb))
+;   (drawLegs (me-lleg zmb))
+  (glppm ; rarm, fix these later
+   (send (me-rarm zmb) trsYto0)
+   (send (me-rarm zmb) rotX 60)
+   (send (me-rarm zmb) trsYtoRo)
+   (draw (me-rarm zmb)))
+  (glppm ; lleg
+   (send (me-lleg zmb) trsto0) 
+   (send (me-lleg zmb) rotZ -45)
+   (send (me-lleg zmb) trstoRo)
+   (draw (me-lleg zmb)))
+  
+   (drawLegs (me-rleg zmb))
+   ))
 
 (define myv (me body myhead larm rarm lleg rleg))
-(define myv2 (me body myhead larm rarm lleg rleg))
+(define myv2 (me body myhead2 larm2 rarm lleg rleg2))
 (define gl (new my-canvas% (parent win) (me myv) (sec myv2)))
 
 (send win show #t)
