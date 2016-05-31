@@ -1,9 +1,6 @@
 #! /usr/bin/env racket
 
 #lang racket/gui
-(require racket/class)
-(require racket/gui/base)
-(require sgl)
 (require sgl/gl)
 (require sgl/gl-vectors)
 
@@ -11,7 +8,6 @@
   (let () (glBegin Vertex-Mode) statement ... (glEnd)))
 (define-syntax-rule (glppm statement ...)
   (let () (glPushMatrix) statement ... (glPopMatrix)))
-(define (resize w h) (glViewport 0 0 w h))
 
 (define vec3%
   (class object%
@@ -128,7 +124,8 @@
       (lambda () (when (not textures) (error 'bind-texture "Attempt to use disposed texture%"))
         (glBindTexture GL_TEXTURE_2D (gl-vector-ref textures 0))))
     (define (load-from-bitmap! bitmap)
-      (when textures (dispose)) (set! textures (glGenTextures 1))
+      (when textures (dispose))
+      (set! textures (glGenTextures 1))
       (bind-texture)
       (define image-data
         (let ()
@@ -147,228 +144,160 @@
       (glTexParameteri GL_TEXTURE_2D GL_TEXTURE_MAG_FILTER GL_LINEAR)
       (glTexImage2D GL_TEXTURE_2D 0 4 width height 0 GL_BGRA GL_UNSIGNED_BYTE image-data))
     (define dispose
-      (when textures (glDeleteTextures textures) (set! textures #f)))
+      (when textures
+        (glDeleteTextures textures)
+        (set! textures #f)))
     (super-new)
     (load-from-bitmap! initial-bitmap)
     ))
 
-(define *texture* (delay (new texture% [bitmap (make-object bitmap% "Screen_Shot_2016-05-27_at_6_08_17_PM.png" 'unknown #f)])))
-  
 (define my-canvas%
   (class* canvas% ()
-    (inherit with-gl-context swap-gl-buffers)
-    (init-field (me myv) (sec myv2) (stag stage))
-    (define texture (delay (new texture% [bitmap (make-object bitmap% "Screen_Shot_2016-05-27_at_6_08_17_PM.png" 'unknown #f)])))
+    (inherit refresh with-gl-context swap-gl-buffers) ; refresh
+    (init-field (zmb myv) (sec myv2) (stag stage))
+    (define *texture* (delay (new texture% [bitmap (make-object bitmap% "Screen_Shot_2016-05-27_at_6_08_17_PM.png" 'unknown #f)])))
     (define init? #f)
-
+    
     (define/override (on-paint)
       (with-gl-context
         (lambda ()
-          (unless init?
+          (unless init? 
             (glEnable GL_COLOR_MATERIAL)
             (glBlendFunc GL_SRC_ALPHA GL_ONE_MINUS_SRC_ALPHA)
             (glEnable GL_BLEND)
-            (glEnable GL_TEXTURE_2D) ;; Standard Init
+            (glEnable GL_TEXTURE_2D) 
             (glShadeModel GL_SMOOTH)
             (glClearColor 0.9 0.9 0.9 1.0)
             (glClearDepth 1)
             (glEnable GL_DEPTH_TEST)
             (glDepthFunc GL_LEQUAL)
             (glHint GL_PERSPECTIVE_CORRECTION_HINT GL_NICEST)
-;            (glEnable GL_LIGHT0) ;; default light
-;            (glEnable GL_LIGHTING)
             (set! init? #t))
+          (glClear (+ GL_COLOR_BUFFER_BIT GL_DEPTH_BUFFER_BIT))
+          (glLoadIdentity) 
+          (send (force *texture*) bind-texture)
+          (glTranslatef 0 0 -20)
           
-;          (define p (cc-superimpose (colorize (disk 100) "white") (text (format "~a" key-code) 'default 72)))
-;          (send (force *texture*) load-from-bitmap!) ; this func call args is wrong
-          ;          (pict->bitmap p) ;))  ;;;; don't need these
+          (glBegin GL_QUADS) 
+          (define (face x1 y1 z1 nx0 ny0 nz0 xx0 xy0 xz0 w h)
+            (define (vlen x y z) (sqrt (+ (* x x) (* y y) (* z z))))
+            (define (cross x1 y1 z1 x2 y2 z2) (values (- (* y1 z2) (* z1 y2)) (- (* z1 x2) (* x1 z2)) (- (* x1 y2) (* y1 x2))))
+            (define (scale s x y z) (values (* x s) (* y s) (* z s)))
+            (define (norm x y z) (let ((l (vlen x y z))) (if (zero? l) (values 0 0 1) (scale (/ l) x y z))))
+            (define-values (nx ny nz) (norm nx0 ny0 nz0))
+            (define-values (xx xy xz) (norm xx0 xy0 xz0))
+            (define-values (yx yy yz) (cross xx xy xz nx ny nz))
+            (define (v x y)
+              (glVertex3d
+               (- (+ x1 (* xx x) (* yx y)) 25)
+               (- (+ y1 (* xy x) (* yy y)) 9.4)
+               (- (+ z1 (* xz x) (* yz y)) 25)
+               ))
+            (glTexCoord2i 0 0) (v 0 0)
+            (glTexCoord2i 1 0) (v w 0)
+            (glTexCoord2i 1 1) (v w h)
+            (glTexCoord2i 0 1) (v 0 h))
+          (glColor4d 1 1 1 1) (face -1 -1 +1  0 -1 0  +1 0 0 50 50)
+          (glEnd)
 
-          (send (force texture) bind-texture)
-;          (glBegin)
-;          (glTexCoord2i 0 1)
-;          (glVertex3d (send (send stag getCoords 0) getX) (send (send stag getCoords 0) getY) (send (send stag getCoords 0) getZ))
-;          (glTexCoord2i 1 1)
-;          (glVertex3d (send (send stag getCoords 1) getX) (send (send stag getCoords 1) getY) (send (send stag getCoords 1) getZ))
-;          (glTexCoord2i 1 0)
-;          (glVertex3d (send (send stag getCoords 2) getX) (send (send stag getCoords 2) getY) (send (send stag getCoords 2) getZ))
-;          (glTexCoord2i 0 0)
-;          (glVertex3d (send (send stag getCoords 3) getX) (send (send stag getCoords 3) getY) (send (send stag getCoords 3) getZ))
-;          (glEnd)
-          (send (force texture) bind-texture)
-          (draw-opengl me sec stag)
-          (swap-gl-buffers))
-        ))
+          (draw-opengl zmb sec stag)
+          (glFlush)
+          (swap-gl-buffers)))
+        (queue-callback (lambda () (refresh)) #f))
     (define/override (on-size width height)
       (with-gl-context
-        (lambda ()
-          (resize width height))))
-    (super-instantiate () (style '(gl)))))
-(define win (new frame% (label "Hello world, We Are Zombies~!") (min-width 600) (min-height 800)))
+        (lambda () (glViewport 0 0 width height)
+          (glMatrixMode GL_PROJECTION)
+          (glLoadIdentity)
+          (gluPerspective 45 (/ width height) 0.1 100)
+          (glMatrixMode GL_MODELVIEW) ;; (glOrtho 0 width height 0 0.1 100)
+          (glLoadIdentity)))
+      (refresh))
+    (super-new (style '(gl no-autoclear)))))
 
 (define draw
   (lambda (myhead)
     (glbgnend GL_QUADS (glColor3f 0 0 1) ; 0 1 2 3 上 蓝
-;              (cond [(equal? (send myhead get-isS) #t) (lambda ()
-                                               (send (force *texture*) bind-texture)
-              (glTexCoord2i 0 1)
               (glVertex3d (send (send myhead getCoords 0) getX) (send (send myhead getCoords 0) getY) (send (send myhead getCoords 0) getZ))
-              (glTexCoord2i 1 1)
               (glVertex3d (send (send myhead getCoords 1) getX) (send (send myhead getCoords 1) getY) (send (send myhead getCoords 1) getZ))
-              (glTexCoord2i 1 0)
               (glVertex3d (send (send myhead getCoords 2) getX) (send (send myhead getCoords 2) getY) (send (send myhead getCoords 2) getZ))
-              (glTexCoord2i 0 0)
               (glVertex3d (send (send myhead getCoords 3) getX) (send (send myhead getCoords 3) getY) (send (send myhead getCoords 3) getZ)))
-;                    [else ( lambda () 
-;                           (glVertex3d (send (send myhead getCoords 0) getX) (send (send myhead getCoords 0) getY) (send (send myhead getCoords 0) getZ))
-;                           (glVertex3d (send (send myhead getCoords 1) getX) (send (send myhead getCoords 1) getY) (send (send myhead getCoords 1) getZ))
-;                           (glVertex3d (send (send myhead getCoords 2) getX) (send (send myhead getCoords 2) getY) (send (send myhead getCoords 2) getZ))
-;                           (glVertex3d (send (send myhead getCoords 3) getX) (send (send myhead getCoords 3) getY) (send (send myhead getCoords 3) getZ)))
-                          
     (glbgnend GL_QUADS (glColor3f 1 1 0) ; 7 6 2 3 前 黄
-              (glTexCoord2i 0 1)
               (glVertex3d (send (send myhead getCoords 7) getX) (send (send myhead getCoords 7) getY) (send (send myhead getCoords 7) getZ))
-              (glTexCoord2i 1 1)
               (glVertex3d (send (send myhead getCoords 6) getX) (send (send myhead getCoords 6) getY) (send (send myhead getCoords 6) getZ))
-              (glTexCoord2i 1 0)
               (glVertex3d (send (send myhead getCoords 2) getX) (send (send myhead getCoords 2) getY) (send (send myhead getCoords 2) getZ))
-              (glTexCoord2i 0 0)
               (glVertex3d (send (send myhead getCoords 3) getX) (send (send myhead getCoords 3) getY) (send (send myhead getCoords 3) getZ)))
     (glbgnend GL_QUADS (glColor3f 1 0 0) ; 5 1 2 6 右 红
-              (glTexCoord2i 0 1)
               (glVertex3d (send (send myhead getCoords 5) getX) (send (send myhead getCoords 5) getY) (send (send myhead getCoords 5) getZ))
-              (glTexCoord2i 1 1)
               (glVertex3d (send (send myhead getCoords 1) getX) (send (send myhead getCoords 1) getY) (send (send myhead getCoords 1) getZ))
-              (glTexCoord2i 1 0)
               (glVertex3d (send (send myhead getCoords 2) getX) (send (send myhead getCoords 2) getY) (send (send myhead getCoords 2) getZ))
-              (glTexCoord2i 0 0)
               (glVertex3d (send (send myhead getCoords 6) getX) (send (send myhead getCoords 6) getY) (send (send myhead getCoords 6) getZ)))
     (glbgnend GL_QUADS (glColor3f 0 0 1) ; 4 5 6 7 下 蓝
-              (glTexCoord2i 0 1)
               (glVertex3d (send (send myhead getCoords 4) getX) (send (send myhead getCoords 4) getY) (send (send myhead getCoords 4) getZ))
-              (glTexCoord2i 1 1)
               (glVertex3d (send (send myhead getCoords 5) getX) (send (send myhead getCoords 5) getY) (send (send myhead getCoords 5) getZ))
-              (glTexCoord2i 1 0)
               (glVertex3d (send (send myhead getCoords 6) getX) (send (send myhead getCoords 6) getY) (send (send myhead getCoords 6) getZ))
-              (glTexCoord2i 0 0)
               (glVertex3d (send (send myhead getCoords 7) getX) (send (send myhead getCoords 7) getY) (send (send myhead getCoords 7) getZ)))
     (glbgnend GL_QUADS (glColor3f 1 0 0) ; 4 0 3 7 左 红
-              (glTexCoord2i 0 1)
               (glVertex3d (send (send myhead getCoords 0) getX) (send (send myhead getCoords 0) getY) (send (send myhead getCoords 0) getZ))
-              (glTexCoord2i 1 1)
               (glVertex3d (send (send myhead getCoords 4) getX) (send (send myhead getCoords 4) getY) (send (send myhead getCoords 4) getZ))
-              (glTexCoord2i 1 0)
               (glVertex3d (send (send myhead getCoords 7) getX) (send (send myhead getCoords 7) getY) (send (send myhead getCoords 7) getZ))
-              (glTexCoord2i 0 0)
               (glVertex3d (send (send myhead getCoords 3) getX) (send (send myhead getCoords 3) getY) (send (send myhead getCoords 3) getZ)))
     (glbgnend GL_QUADS (glColor3f 1 1 0) ; 4 5 1 0 后 黄
-              (glTexCoord2i 0 1)
               (glVertex3d (send (send myhead getCoords 4) getX) (send (send myhead getCoords 4) getY) (send (send myhead getCoords 4) getZ))
-              (glTexCoord2i 1 1)
               (glVertex3d (send (send myhead getCoords 5) getX) (send (send myhead getCoords 5) getY) (send (send myhead getCoords 5) getZ))
-              (glTexCoord2i 1 0)
               (glVertex3d (send (send myhead getCoords 1) getX) (send (send myhead getCoords 1) getY) (send (send myhead getCoords 1) getZ))
-              (glTexCoord2i 0 0)
               (glVertex3d (send (send myhead getCoords 0) getX) (send (send myhead getCoords 0) getY) (send (send myhead getCoords 0) getZ)))))
 
-(define (draw-opengl zmb sec stag) ; vector
-  (glClearColor 1 1 1 0.0)
-  (glEnable GL_DEPTH_TEST)
-  (glClear GL_COLOR_BUFFER_BIT)
-  (glClear GL_DEPTH_BUFFER_BIT)
+(define (draw-opengl zmb sec stag) 
+;  (glMatrixMode GL_PROJECTION) 
+;  (glLoadIdentity)
+;  (glOrtho -25.0  25.0  -25.0  25.0  -25.0  25.0) ; temp for test
+;  (glMatrixMode GL_MODELVIEW)
+;  (glLoadIdentity)
 
-  (glEnable GL_COLOR_MATERIAL)
-  (glBlendFunc GL_SRC_ALPHA GL_ONE_MINUS_SRC_ALPHA)
-  (glEnable GL_BLEND)
-  (glEnable GL_TEXTURE_2D) ;; Standard Init
-  (glShadeModel GL_SMOOTH)
-  (glClearColor 0.9 0.9 0.9 1.0)
-  (glClearDepth 1)
-  (glEnable GL_DEPTH_TEST)
-  (glDepthFunc GL_LEQUAL)
-  (glHint GL_PERSPECTIVE_CORRECTION_HINT GL_NICEST)
-  
-  (glMatrixMode GL_PROJECTION)
-  (glLoadIdentity)
-  (glOrtho -25.0  25.0  -25.0  25.0  -25.0  25.0)
-;  (glOrtho (/ (- max-axis) 2) max-axis (/ (- max-axis) 2) max-axis (/ (- max-axis) 2) max-axis)
-;  (gluPerspective 30.0 0.75 0.6 20) ; 600 / 800
-  (glMatrixMode GL_MODELVIEW)
-  (glLoadIdentity)
-;  (glPushMatrix)      ; not self defined, difficult to control
-;  (glTranslatef 0 4.8 0)
-;  (glRotatef -90 0 0 1) ; rotate center wrong
-;  (glTranslatef 0 -4.8 0)
-;  (gluSphere (gluNewQuadric) 1.0 15 15)  
-;  (glPopMatrix)
-
-  (glTranslatef -5 0.0 0.0)
+  (glTranslatef 0 0 -25.0)
   (glRotatef 5 1.0 0.0 0.0) ; 60
   (glRotatef 10 0.0 1.0 0.0) ; -60
-  (glRotatef 5 0.0 0.0 1.0) ; 120
+  (glRotatef 0.5 0.0 0.0 1.0) ; 120
   
 ; (glppm
 ;  (glRotatef 90 1 0 0)
 
-  (send (force *texture*) bind-texture)
-;  (glbgnend GL_QUADS (glColor3f 1 1 1) ; 9
-;   (glTexCoord2i 0 1)
-;   (glVertex3d -25 -9.4 -25)
-;   (glTexCoord2i 1 1)
-;   (glVertex3d 25 -9.4 -25)
-;   (glTexCoord2i 1 0)
-;   (glVertex3d 25 -9.4 25)
-;   (glTexCoord2i 0 0)
-;   (glVertex3d -25 -9.4 25))
-  (draw stag)
+;  (draw stag)
   
   (drawZmbs zmb)
-;  (draw (me-body zmb))
-;  (drawHead (me-head zmb))
-;  (drawArms (me-larm zmb))
-;  (glppm ; rarm
-;   (send (me-rarm zmb) trsYto0)
-;   (send (me-rarm zmb) rotX 60)
-;   (send (me-rarm zmb) trsYtoRo)
-;   (draw (me-rarm zmb)))
-;  (glppm ; lleg
-;   (send (me-lleg zmb) trsto0) 
-;   (send (me-lleg zmb) rotZ -45)
-;   (send (me-lleg zmb) trstoRo)
-;   (draw (me-lleg zmb)))
-;  (drawLegs (me-rleg zmb))
-;  ) ; (glppm) ; ck
 
-;  (glTranslatef 8 0 0) ;; 31
-;
-;  ; serve as control
-;  (draw (me-body sec)) 
-;
-;  (send (head-hd (me-head sec)) resetAngle (new vec3% [x 0] [y -50] [z 0]))
-;  (send (head-le (me-head sec)) resetAngle (new vec3% [x 0] [y 0] [z 45]))
-;  (send (head-re (me-head sec)) resetAngle (new vec3% [x 0] [y 0] [z -45]))
-;  (send (head-mo (me-head sec)) resetAngle (new vec3% [x 0] [y 0] [z 45]))
-;  (drawHead (me-head sec))
-;
-;  (send (arms-la (me-larm sec)) resetAngle (new vec3% [x 0] [y 0] [z 0]))
-;  (send (arms-sa (me-larm sec)) resetAngle (new vec3% [x 0] [y 0] [z 0]))
-;  (send (arms-fg (me-larm sec)) resetAngle (new vec3% [x 0] [y 0] [z 0]))
-;  (drawArms (me-larm sec))
-;
-;  (glppm
-;   (send (me-rarm sec) trsYto0)
-;   (send (me-rarm sec) rotX 60)
-;   (send (me-rarm sec) trsYtoRo)
-;   (draw (me-rarm sec)))
-;  (glppm
-;   (send (me-lleg sec) trsto0) 
-;   (send (me-lleg sec) rotZ -45)
-;   (send (me-lleg sec) trstoRo)
-;   (draw (me-lleg sec)))
-;
-;  (send (legs-ll (me-rleg sec)) resetAngle (new vec3% [x -90] [y 0] [z 60]))
-;  (send (legs-sl (me-rleg sec)) resetAngle (new vec3% [x 135] [y 0] [z 0]))
-;  (send (legs-ft (me-rleg sec)) resetAngle (new vec3% [x 90] [y 0] [z 0]))
-;  (drawLegs (me-rleg sec))
+  (glTranslatef 8 0 0) ;; 31
+
+  ; serve as control
+  (draw (me-body sec)) 
+
+  (send (head-hd (me-head sec)) resetAngle (new vec3% [x 0] [y -50] [z 0]))
+  (send (head-le (me-head sec)) resetAngle (new vec3% [x 0] [y 0] [z 45]))
+  (send (head-re (me-head sec)) resetAngle (new vec3% [x 0] [y 0] [z -45]))
+  (send (head-mo (me-head sec)) resetAngle (new vec3% [x 0] [y 0] [z 45]))
+  (drawHead (me-head sec))
+
+  (send (arms-la (me-larm sec)) resetAngle (new vec3% [x 0] [y 0] [z 0]))
+  (send (arms-sa (me-larm sec)) resetAngle (new vec3% [x 0] [y 0] [z 0]))
+  (send (arms-fg (me-larm sec)) resetAngle (new vec3% [x 0] [y 0] [z 0]))
+  (drawArms (me-larm sec))
+
+  (glppm
+   (send (me-rarm sec) trsYto0)
+   (send (me-rarm sec) rotX 60)
+   (send (me-rarm sec) trsYtoRo)
+   (draw (me-rarm sec)))
+  (glppm
+   (send (me-lleg sec) trsto0) 
+   (send (me-lleg sec) rotZ -45)
+   (send (me-lleg sec) trstoRo)
+   (draw (me-lleg sec)))
+
+  (send (legs-ll (me-rleg sec)) resetAngle (new vec3% [x -90] [y 0] [z 60]))
+  (send (legs-sl (me-rleg sec)) resetAngle (new vec3% [x 135] [y 0] [z 0]))
+  (send (legs-ft (me-rleg sec)) resetAngle (new vec3% [x 90] [y 0] [z 0]))
+  (drawLegs (me-rleg sec))
   )
 
 (define timer
@@ -495,6 +424,11 @@
 (define myv (me body myhead larm rarm lleg rleg))
 (define myv2 (struct-copy me myv [head myhead2] [larm larm2] [rleg rleg2]))
 
-(define gl (new my-canvas% (parent win) (me myv) (sec myv2) (stag stage)))
 
-(send win show #t)
+(module+ main
+  (define win (new frame% (label "Hello world, We Are Zombies~!") (min-width 640) (min-height 480)))
+  (define gl (new my-canvas% (parent win) (zmb myv) (sec myv2) (stag stage)))
+  (unless (send (send (send gl get-dc) get-gl-context) ok?)
+    (error 'gl-run "OpenGL context failed to initialize"))
+  (send gl focus)
+  (send win show #t))
