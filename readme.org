@@ -4,8 +4,11 @@
 #+author: deepwaterooo
 
 * Introduction
-- Finished a surface rendering my team buddy's spiderman as the dancing stage. So far consider texture done, will need work on zombie movements a little bit with all the time left before Wednesday night's demo. 
+- Considering that I understand the way how to traverse and draw different parts of the zombie, I know I could but don't have to take all the effort to draw all the fingers in order to make a "fighting" pose (a hand cube stands for another "zombie"-like rotatation for 2 or 3 different finger parts). 
+- I don't like the latter part of the project during to rotating simply around the center, though I want to make the zombie walk (but I don't have enough time to work on it). While I will try to work on the walking for a few (3-4) hours tonight to be able to at least have some taste. 
+- My team buddy's spiderman Dancing stage could simply be rendered by defining the four glVertex3d vertex ([-25, -9.4, 25], [25, -9.4, 25], [25, -9.4, -25], [-25, -9.4, -25]), tex coordinate four points (00 10 11 01), and a Texture. By including norm data, it supposed to have some lights. 
 - Todos: 
+  - Speed a few hours (3-4) tonight to work on the zombie walking. 
   - Need try hard to figure out animation, how to dance with time changes, or need to move according to keytype inputs triggers. 
   - Sub obj% for cubes, and spheres if I need and want to implement any sphere for head, or eyes. But it seems I won't have enough time for this one now. Will try these ones through other projects later on then. 
 - A current rotatable zombie and my team buddy's spiderman are looking like:
