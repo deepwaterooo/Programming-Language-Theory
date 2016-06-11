@@ -1,27 +1,24 @@
-% Created 2016-06-01 Wed 17:52
+% Created 2016-06-11 Sat 09:14
 \documentclass[9pt,b5paper]{article}
 \usepackage{fontspec}
-\setmainfont{STSong}
 \usepackage{graphicx}
 \usepackage{xcolor}
 \usepackage{xeCJK}
-\setCJKmainfont{STSong}
+\setCJKmainfont{Songti SC}
 \usepackage{longtable}
 \usepackage{float}
 \usepackage{textcomp}
 \usepackage{geometry}
-\geometry{left=0cm,right=0cm,top=0cm,bottom=0cm}
+\geometry{left=0.1cm,right=0.1cm,top=0.1cm,bottom=0.1cm}
 \usepackage{multirow}
 \usepackage{multicol}
-\usepackage{listings}
 \usepackage{algorithm}
 \usepackage{algorithmic}
 \usepackage{latexsym}
 \usepackage{natbib}
+\usepackage{listings}
+\usepackage{minted}
 \usepackage[xetex,colorlinks=true,CJKbookmarks=true,linkcolor=blue,urlcolor=blue,menucolor=blue]{hyperref}
-
-
-\lstset{language=c++,numbers=left,numberstyle=\tiny,basicstyle=\ttfamily\small,tabsize=4,frame=none,escapeinside=``,extendedchars=false,keywordstyle=\color{blue!70},commentstyle=\color{red!55!green!55!blue!55!},rulesepcolor=\color{red!20!green!20!blue!20!}}
 \author{deepwaterooo}
 \date{\today}
 \title{Programming Language Theory -- Summer 2016}
@@ -38,6 +35,11 @@
 \section{Introduction}
 \label{sec-1}
 \begin{itemize}
+\item hw2: haskell practice exercise code for any practice due on 6/15/2016 11:55pm.
+\item 
+\item 
+\item 
+\item 
 \item Considering that I understand the way how to traverse and draw different parts of the zombie, I know I could but don't have to take all the effort to draw all the fingers in order to make a "fighting" pose (a hand cube stands for another "zombie"-like rotatation for 2 or 3 different finger parts).
 \item I don't like the latter part of the project during to rotating simply around the center, though I want to make the zombie walk (but I don't have enough time to work on it). While I will try to work on the walking for a few (3-4) hours tonight to be able to at least have some taste.
 \item My team buddy's spiderman Dancing stage could simply be rendered by defining the four glVertex3d vertex ([-25, -9.4, 25], [25, -9.4, 25], [25, -9.4, -25], [-25, -9.4, -25]), tex coordinate four points (00 10 11 01), and a Texture. By including norm data, it supposed to have some lights.
@@ -54,8 +56,26 @@
 
 \section{References}
 \label{sec-2}
-\subsection{opengl sgl}
+\subsection{Haskell}
 \label{sec-2-1}
+\begin{itemize}
+\item Haskell \url{http://fleurer-lee.com/lyah/ready-begin.htm}
+\item \url{http://wiki.jikexueyuan.com/project/haskell-guide/ready-go.html}
+\item real world \url{http://rwh.readthedocs.io/en/latest/index.html}
+\item \url{http://wiki.bitbegin.com/read/docs/9-haskell/1-haskell-brief-introduction}
+\item \url{http://www.cnblogs.com/youxin/category/511831.html}
+\item \url{https://wiki.haskell.org/OpenGL}
+\item opengl \url{https://github.com/madjestic/Haskell-OpenGL-Tutorial}
+\item \url{http://www.arcadianvisions.com/blog/2011/modern-opengl-with-haskell.html}
+\item cube \url{https://github.com/haskell-opengl/GLUT/blob/master/examples/RedBook4/Cube.hs}
+\item \url{https://wiki.haskell.org/OpenGLTutorial2}
+\item 3d旋转魔方 \url{http://wenku.baidu.com/view/6e7b0d22915f804d2b16c1c1.html}
+\item 
+\item 
+\end{itemize}
+
+\subsection{opengl sgl}
+\label{sec-2-2}
 \begin{itemize}
 \item rect hello world \url{https://lists.racket-lang.org/users/archive/2010-October/042474.html}
 \item cube base: \url{https://gist.github.com/tonyg/5425736}
@@ -81,7 +101,7 @@
 \item gui \url{https://docs.racket-lang.org/pict3d/rendering.html}
 \end{itemize}
 \subsection{Animation}
-\label{sec-2-2}
+\label{sec-2-3}
 \begin{itemize}
 \item 3d programming: \url{http://cs317y982s950831.blogspot.com/}
 \item ruby \url{https://www.youtube.com/watch?v=Iq5YbRDYVE4}
@@ -93,36 +113,32 @@
 \item ani example \url{https://groups.google.com/forum/#!topic/racket-users/ZQ_6_cIirDk}
 \end{itemize}
 \subsection{Texture}
-\label{sec-2-3}
+\label{sec-2-4}
 \begin{itemize}
 \item \url{https://gist.github.com/tonyg/5425736}
 \item \url{http://stackoverflow.com/questions/30709454/racket-opengl-glviewport-not-correctly-mapping-normal-coordinates-to-window-coo}
 \item \url{http://lists.racket-lang.org/users/archive/2010-November/043118.html}
 \item main \url{https://gist.github.com/tonyg/5425736}
-\item 
 \end{itemize}
 
-\section{OOP}
-\label{sec-3}
+\subsection{OOP}
+\label{sec-2-5}
 \begin{itemize}
 \item oop \url{https://docs.racket-lang.org/guide/classes.html}
 \item creating classes \url{https://docs.racket-lang.org/reference/createclass.html}
 \item struct-copy \url{http://yuyang0.github.io/notes/scheme.html}
-\item 
 \end{itemize}
 
 \subsection{robot dance}
-\label{sec-3-1}
+\label{sec-2-6}
 \begin{itemize}
 \item \url{https://www.youtube.com/watch?v=lacAgc7rv1o}
 \item \url{https://www.youtube.com/watch?v=AoCXPicEa8o}
 \item \url{https://www.youtube.com/watch?v=wQ4KXoFHwL4}
-\item 
-\item 
 \end{itemize}
 
 \subsection{other}
-\label{sec-3-2}
+\label{sec-2-7}
 \begin{itemize}
 \item framework \url{https://github.com/NetEase/lively-logic}
 \item \url{https://www.youtube.com/watch?v=SCh0zmP6R5A}
@@ -133,11 +149,6 @@
 \item \url{http://docs.racket-lang.org/guide/classes.html}
 \item \url{https://docs.racket-lang.org/quick/}
 \item \url{http://docs.racket-lang.org/draw/index.html}
-\item Haskell \url{http://fleurer-lee.com/lyah/ready-begin.htm}
-\item \url{http://wiki.jikexueyuan.com/project/haskell-guide/ready-go.html}
-\item real world \url{http://rwh.readthedocs.io/en/latest/index.html}
-\item \url{http://wiki.bitbegin.com/read/docs/9-haskell/1-haskell-brief-introduction}
-\item \url{http://www.cnblogs.com/youxin/category/511831.html}
 \end{itemize}
 % Emacs 24.5.1 (Org mode 8.2.7c)
 \end{document}

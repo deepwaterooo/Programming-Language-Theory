@@ -1,9 +1,13 @@
 #+latex_class: cn-article
-#+latex_header: \lstset{language=c++,numbers=left,numberstyle=\tiny,basicstyle=\ttfamily\small,tabsize=4,frame=none,escapeinside=``,extendedchars=false,keywordstyle=\color{blue!70},commentstyle=\color{red!55!green!55!blue!55!},rulesepcolor=\color{red!20!green!20!blue!20!}}
 #+title: Programming Language Theory -- Summer 2016
 #+author: deepwaterooo
 
 * Introduction
+- hw2: haskell practice exercise code for any practice due on 6/15/2016 11:55pm.
+- 
+- 
+- 
+- 
 - Considering that I understand the way how to traverse and draw different parts of the zombie, I know I could but don't have to take all the effort to draw all the fingers in order to make a "fighting" pose (a hand cube stands for another "zombie"-like rotatation for 2 or 3 different finger parts). 
 - I don't like the latter part of the project during to rotating simply around the center, though I want to make the zombie walk (but I don't have enough time to work on it). While I will try to work on the walking for a few (3-4) hours tonight to be able to at least have some taste. 
 - My team buddy's spiderman Dancing stage could simply be rendered by defining the four glVertex3d vertex ([-25, -9.4, 25], [25, -9.4, 25], [25, -9.4, -25], [-25, -9.4, -25]), tex coordinate four points (00 10 11 01), and a Texture. By including norm data, it supposed to have some lights. 
@@ -16,6 +20,21 @@
 [[./pic/Screen_Shot_2016-05-31_at_1_52_26_AM.png]]
 
 * References
+** Haskell
+- Haskell http://fleurer-lee.com/lyah/ready-begin.htm
+- http://wiki.jikexueyuan.com/project/haskell-guide/ready-go.html
+- real world http://rwh.readthedocs.io/en/latest/index.html
+- http://wiki.bitbegin.com/read/docs/9-haskell/1-haskell-brief-introduction
+- http://www.cnblogs.com/youxin/category/511831.html
+- https://wiki.haskell.org/OpenGL
+- opengl https://github.com/madjestic/Haskell-OpenGL-Tutorial
+- http://www.arcadianvisions.com/blog/2011/modern-opengl-with-haskell.html
+- cube https://github.com/haskell-opengl/GLUT/blob/master/examples/RedBook4/Cube.hs
+- https://wiki.haskell.org/OpenGLTutorial2
+- 3d旋转魔方 http://wenku.baidu.com/view/6e7b0d22915f804d2b16c1c1.html
+- 
+- 
+
 ** opengl sgl
 - rect hello world https://lists.racket-lang.org/users/archive/2010-October/042474.html
 - cube base: https://gist.github.com/tonyg/5425736
@@ -53,20 +72,16 @@
 - http://stackoverflow.com/questions/30709454/racket-opengl-glviewport-not-correctly-mapping-normal-coordinates-to-window-coo
 - http://lists.racket-lang.org/users/archive/2010-November/043118.html
 - main https://gist.github.com/tonyg/5425736
-- 
 
-* OOP
+** OOP
 - oop https://docs.racket-lang.org/guide/classes.html
 - creating classes https://docs.racket-lang.org/reference/createclass.html
 - struct-copy http://yuyang0.github.io/notes/scheme.html
-- 
 
 ** robot dance
 - https://www.youtube.com/watch?v=lacAgc7rv1o
 - https://www.youtube.com/watch?v=AoCXPicEa8o
 - https://www.youtube.com/watch?v=wQ4KXoFHwL4
-- 
-- 
 
 ** other
 - framework https://github.com/NetEase/lively-logic
@@ -78,8 +93,3 @@
 - http://docs.racket-lang.org/guide/classes.html
 - https://docs.racket-lang.org/quick/
 - http://docs.racket-lang.org/draw/index.html
-- Haskell http://fleurer-lee.com/lyah/ready-begin.htm
-- http://wiki.jikexueyuan.com/project/haskell-guide/ready-go.html
-- real world http://rwh.readthedocs.io/en/latest/index.html
-- http://wiki.bitbegin.com/read/docs/9-haskell/1-haskell-brief-introduction
-- http://www.cnblogs.com/youxin/category/511831.html

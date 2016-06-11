@@ -176,7 +176,6 @@
           (glLoadIdentity) 
           (send (force *texture*) bind-texture)
           (glTranslatef 0 0 -20)
-;          (glRotatef yrot 0 1 0) ; don't need the stage to rotate
           
           (glBegin GL_QUADS)
           (define (face x1 y1 z1 nx0 ny0 nz0 xx0 xy0 xz0 w h)
@@ -258,51 +257,42 @@
 ; (glppm
 ;  (glRotatef 90 1 0 0)
 
-;  (draw stag)
   (send (me-body zmb) resetAngleY yrot)
   (drawZmbs zmb)
 
 
-;  (glTranslatef 12 0 0) ;; 32
-;
-;  ; serve as control
-;  (send (me-body sec) resetAngleY yrot)
-;  (draw (me-body sec)) 
-;
-;  (send (head-hd (me-head sec)) resetAngle (new vec3% [x 0] [y -50] [z 0]))
-;  (send (head-le (me-head sec)) resetAngle (new vec3% [x 0] [y 0] [z 45]))
-;  (send (head-re (me-head sec)) resetAngle (new vec3% [x 0] [y 0] [z -45]))
-;  (send (head-mo (me-head sec)) resetAngle (new vec3% [x 0] [y 0] [z 45]))
-;  (drawHead (me-head sec))
-;
-;  (send (arms-la (me-larm sec)) resetAngle (new vec3% [x 0] [y 0] [z 0]))
-;  (send (arms-sa (me-larm sec)) resetAngle (new vec3% [x 0] [y 0] [z 0]))
-;  (send (arms-fg (me-larm sec)) resetAngle (new vec3% [x 0] [y 0] [z 0]))
-;  (drawArms (me-larm sec))
-;
-;  (glppm
-;   (send (me-rarm sec) trsYto0)
-;   (send (me-rarm sec) rotX 90)
-;   (send (me-rarm sec) trsYtoRo)
-;   (draw (me-rarm sec)))
-;  (glppm
-;   (send (me-lleg sec) trsto0) 
-;   (send (me-lleg sec) rotZ -45)
-;   (send (me-lleg sec) trstoRo)
-;   (draw (me-lleg sec)))
-;
-;  (send (legs-ll (me-rleg sec)) resetAngle (new vec3% [x -90] [y 0] [z 60]))
-;  (send (legs-sl (me-rleg sec)) resetAngle (new vec3% [x 135] [y 0] [z 0]))
-;  (send (legs-ft (me-rleg sec)) resetAngle (new vec3% [x 90] [y 0] [z 0]))
-;  (drawLegs (me-rleg sec))
-  )
+  (glTranslatef 12 0 0) ;; 32
 
-;(define timer
-;  (lambda (value refreshMills)
-;    (set! refreshMills 15)
-;;    gluPostRedisplay()      ;      // Post re-paint request to activate display()
-;;    gluTimerFunc(refreshMills timer 0)   ; // next timer call milliseconds later
-;    ))
+  (send (me-body sec) resetAngleY yrot)
+  (draw (me-body sec)) 
+
+  (send (head-hd (me-head sec)) resetAngle (new vec3% [x 0] [y -50] [z 0]))
+  (send (head-le (me-head sec)) resetAngle (new vec3% [x 0] [y 0] [z 45]))
+  (send (head-re (me-head sec)) resetAngle (new vec3% [x 0] [y 0] [z -45]))
+  (send (head-mo (me-head sec)) resetAngle (new vec3% [x 0] [y 0] [z 45]))
+  (drawHead (me-head sec))
+
+  (send (arms-la (me-larm sec)) resetAngle (new vec3% [x 0] [y 0] [z 0]))
+  (send (arms-sa (me-larm sec)) resetAngle (new vec3% [x 0] [y 0] [z 0]))
+  (send (arms-fg (me-larm sec)) resetAngle (new vec3% [x 0] [y 0] [z 0]))
+  (drawArms (me-larm sec))
+
+  (glppm
+   (send (me-rarm sec) trsYto0)
+   (send (me-rarm sec) rotX 90)
+   (send (me-rarm sec) trsYtoRo)
+   (draw (me-rarm sec)))
+  (glppm
+   (send (me-lleg sec) trsto0) 
+   (send (me-lleg sec) rotZ -45)
+   (send (me-lleg sec) trstoRo)
+   (draw (me-lleg sec)))
+
+  (send (legs-ll (me-rleg sec)) resetAngle (new vec3% [x -90] [y 0] [z 60]))
+  (send (legs-sl (me-rleg sec)) resetAngle (new vec3% [x 135] [y 0] [z 0]))
+  (send (legs-ft (me-rleg sec)) resetAngle (new vec3% [x 90] [y 0] [z 0]))
+  (drawLegs (me-rleg sec))
+  )
 
 (define sim-time
   (let ((start-time (current-inexact-milliseconds)))
@@ -318,7 +308,7 @@
 (define myhead (head hbox leye reye moth))
 (define hbox2 (new obj% [size (new vec3% [x 0.9] [y 0.9] [z 0.9])] [ori (new vec3% [x 0.00] [y 2.9] [z 0.0])] [ro (new vec3% [x 0.00] [y 2.0] [z 0.0])] [ax 3.0] [angle (new vec3% [x 0] [y 0] [z 0])] [color "yellow"] [coord '()]))
 (define myhead2 (head hbox2 leye reye moth))
-(define (drawHead head) ; head : { hd, then le | re | mo separately }
+(define (drawHead head) 
   (glppm 
    (send (head-hd head) trsto0)
    (send (head-hd head) rotExcute)
@@ -412,7 +402,7 @@
    (send (me-rarm zmb) rotX 60)
    (send (me-rarm zmb) trsYtoRo)
    (draw (me-rarm zmb)))
-  (glppm ; lleg
+  (glppm 
    (send (me-lleg zmb) trsto0) 
    (send (me-lleg zmb) rotZ -45)
    (send (me-lleg zmb) trstoRo)
