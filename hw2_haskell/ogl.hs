@@ -7,9 +7,9 @@ main :: IO ()
 main = do
   (_progName, _args) <- getArgsAndInitialize
   initialDisplayMode $= [WithDepthBuffer, DoubleBuffered]
-  _window <- createWindow "Hello World"
+  _window <- createWindow "Magic Cube"
   reshapeCallback $= Just reshape
-  depthFunc $= Just Less -- the comparison function for depth the buffer
+  depthFunc $= Just Less 
   angle <- newIORef 0
   delta <- newIORef 0.1
   pos <- newIORef (0, 0)
